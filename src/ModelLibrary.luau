@@ -129,7 +129,7 @@ local function addTrail(handle, color, a, b)
 	tr.Lifetime = 0.22
 	tr.LightEmission = 1
 	tr.Color = ColorSequence.new(color, WHITE)
-	tr.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.3), NumberSequenceKeypoint.new(1, 1) })
+	tr.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.6), NumberSequenceKeypoint.new(1, 1) })
 	tr.FaceCamera = true
 	tr.Parent = handle
 end
@@ -239,9 +239,9 @@ local function buildToolParts(tool, handle, def, level)
 		local l = Instance.new("PointLight")
 		l.Color = c
 		l.Range = 10
-		l.Brightness = 1.8
+		l.Brightness = 1
 		l.Parent = handle
-		sparkles(glowParent, c, 8, 0.3)
+		sparkles(glowParent, c, 3, 0.25)
 	end
 end
 
@@ -326,7 +326,7 @@ function Lib.BuildEgg(def, height, anchored)
 	kit.cyl(h * 0.07, w * 1.025, CFrame.new(0, -h * 0.04, 0) * AY, bandColor, (theme == "Magma" or theme == "Void") and M.Neon or M.SmoothPlastic)
 	for k = 1, 8 do
 		local t = k / 8 * math.pi * 2
-		kit.ball(h * 0.075, onShell(t, math.pi / 2 + 0.02, -0.02), theme == "Plain" and WHITE or shade(col, 0.6), M.Neon)
+		kit.ball(h * 0.075, onShell(t, math.pi / 2 + 0.02, -0.02), theme == "Plain" and WHITE or shade(col, 0.5), M.Glass)
 	end
 
 	if theme == "Meadow" or theme == "Plain" then
@@ -346,7 +346,7 @@ function Lib.BuildEgg(def, height, anchored)
 		end
 	elseif theme == "Crystal" then
 		local inner = kit.ell(V3(w * 0.55, h * 0.55, w * 0.55), CFrame.identity, shade(col, 0.5), M.Neon)
-		inner.Transparency = 0.35
+		inner.Transparency = 0.6
 		for k = 1, 9 do
 			local cf = onShell(rng:NextNumber(0, 6.28), rng:NextNumber(0.35, 2.4), 0.25)
 			local len = rng:NextNumber(0.8, 1.5) * h / 5.2
@@ -813,9 +813,9 @@ function Lib.BuildPet(def, Config)
 		local l = Instance.new("PointLight")
 		l.Color = rarity.Color
 		l.Range = 9
-		l.Brightness = 1.4
+		l.Brightness = 0.8
 		l.Parent = root
-		sparkles(root, rarity.Color, 5, 0.3)
+		sparkles(root, rarity.Color, 2, 0.25)
 	end
 	if rarity and rarity.Order >= 5 then
 		local haloY = (body == "Golem") and 1.75 or (body == "Orb") and 1.75 or 1.65
@@ -827,10 +827,10 @@ function Lib.BuildPet(def, Config)
 	end
 	if rarity and rarity.Order >= 6 then
 		emitter(root, {
-			Texture = SPARKLE, Rate = 14, Lifetime = NumberRange.new(0.8, 1.3), Speed = NumberRange.new(0.3, 0.8),
+			Texture = SPARKLE, Rate = 5, Lifetime = NumberRange.new(0.8, 1.3), Speed = NumberRange.new(0.3, 0.8),
 			SpreadAngle = Vector2.new(180, 180), LightEmission = 1, Color = ColorSequence.new(rarity.Color, WHITE),
 			Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.9), NumberSequenceKeypoint.new(1, 0) }),
-			Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 1) }),
+			Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.7), NumberSequenceKeypoint.new(1, 1) }),
 		})
 	end
 	return m

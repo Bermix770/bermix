@@ -388,7 +388,7 @@ local function sellPad(pos, facing)
 	light(pad, rgb(80, 255, 120), 20, 1.5)
 	billboard(pad, "💰 SELL", V3(0, 6, 0), 200, 60, 140, rgb(130, 255, 150))
 	emitter(pad, {
-		Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 6, Lifetime = NumberRange.new(1, 1.6),
+		Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 2, Lifetime = NumberRange.new(1, 1.6),
 		Speed = NumberRange.new(3, 6), SpreadAngle = Vector2.new(15, 15), EmissionDirection = Enum.NormalId.Right,
 		Color = ColorSequence.new(rgb(120, 255, 150)), Size = NumberSequence.new(0.6), LightEmission = 1,
 	})
@@ -466,14 +466,14 @@ end
 ---------------------------------------------------------------- lighting & terrain look
 local function setupLighting()
 	Lighting.ClockTime = 14
-	Lighting.Brightness = 2.6
+	Lighting.Brightness = 2.2
 	Lighting.GlobalShadows = true
 	Lighting.OutdoorAmbient = rgb(125, 128, 140)
 	Lighting.Ambient = rgb(55, 58, 70)
 	Lighting.EnvironmentDiffuseScale = 1
 	Lighting.EnvironmentSpecularScale = 1
 	Lighting.ShadowSoftness = 0.2
-	Lighting.ExposureCompensation = 0.1
+	Lighting.ExposureCompensation = 0
 	Lighting.GeographicLatitude = 35
 	-- Technology is only writable from Studio (command bar / plugins); the place file already uses Future.
 	pcall(function() Lighting.Technology = Enum.Technology.Future end)
@@ -491,23 +491,23 @@ local function setupLighting()
 	atm.Offset = 0.15
 	atm.Color = rgb(199, 222, 255)
 	atm.Decay = rgb(106, 128, 172)
-	atm.Glare = 0.5
-	atm.Haze = 1.2
+	atm.Glare = 0.2
+	atm.Haze = 1
 	local bloom = ensure("BloomEffect", "Bloom")
-	bloom.Intensity = 0.8
-	bloom.Size = 28
-	bloom.Threshold = 1.3
+	bloom.Intensity = 0.35
+	bloom.Size = 20
+	bloom.Threshold = 2.2
 	local rays = ensure("SunRaysEffect", "SunRays")
-	rays.Intensity = 0.1
+	rays.Intensity = 0.04
 	rays.Spread = 0.75
 	ensure("ColorCorrectionEffect", "ZoneColor")
 	local grade = ensure("ColorCorrectionEffect", "BaseGrade")
-	grade.Contrast = 0.08
-	grade.Saturation = 0.12
-	grade.Brightness = 0.01
+	grade.Contrast = 0.04
+	grade.Saturation = -0.05
+	grade.Brightness = 0
 	grade.TintColor = rgb(255, 252, 246)
 	local dof = ensure("DepthOfFieldEffect", "DepthOfField")
-	dof.FarIntensity = 0.12
+	dof.FarIntensity = 0.05
 	dof.FocusDistance = 40
 	dof.InFocusRadius = 70
 	dof.NearIntensity = 0
@@ -685,7 +685,7 @@ local function buildHub()
 		vcyl(p0 + V3(0, 2.0, 0), 0.25, 6.3, rgb(255, 200, 70), M.Foil, nil, false)
 		local ring = vcyl(p0 + V3(0, 2.2, 0), 0.25, 5.4, egg.Color, M.Neon, nil, false)
 		emitter(ring, {
-			Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 6, Lifetime = NumberRange.new(1, 1.6),
+			Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 2, Lifetime = NumberRange.new(1, 1.6),
 			Speed = NumberRange.new(1, 2), SpreadAngle = Vector2.new(25, 25), EmissionDirection = Enum.NormalId.Right, LightEmission = 1,
 			Color = ColorSequence.new(egg.Color:Lerp(Color3.new(1, 1, 1), 0.5)), Size = NumberSequence.new(0.35, 0),
 		})

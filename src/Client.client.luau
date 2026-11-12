@@ -523,6 +523,75 @@ R.Hatch.OnClientEvent:Connect(function(eggIndex, petName)
 end)
 
 
+---------------------------------------------------------------- tutorial
+-- Shown once per player (saved on the server as TutorialDone); can be reopened with the ❓ button.
+local tutSteps = {
+	{ "⛏ Welcome to Mine Rush!", "Mine ores, sell them for coins, buy better tools and unlock new zones. Let's learn the basics!" },
+	{ "1. Mine ores", "Follow the yellow beam to Sunny Meadow. Click an ore (or hold the mouse) to mine it. Mine 3 ores.", function(s0) return (state.TotalMined or 0) >= (s0.TotalMined or 0) + 3 end },
+	{ "2. Sell your ores", "Ores go into your backpack. Step on a 💰 sell pad to turn them into coins.", function(s0) return (state.Coins or 0) > (s0.Coins or 0) end },
+	{ "3. Upgrade", "Press F (or the Shop button) to buy stronger pickaxes and bigger backpacks.", function() return windows.Shop and windows.Shop.Frame.Visible end },
+	{ "4. Quests", "Your quest is shown on the left. Complete it and talk to Old Miner Joe in town to get the reward." },
+	{ "5. Pets", "Hatch eggs at the 🥚 Hatchery in town. Pets boost your coins. Press P to equip your best pets." },
+	{ "6. New zones", "Better tools unlock new zones with richer ores. Press M to open the map and teleport. Good luck, miner!" },
+}
+
+local tutFrame = new("Frame", { Name = "Tutorial", Size = U2(0, 460, 0, 170), Position = U2(0.5, -230, 0, 90), BackgroundColor3 = rgb(22, 26, 40), BackgroundTransparency = 0.08, Visible = false, ZIndex = 40 }, gui)
+corner(tutFrame, 14)
+stroke(tutFrame, rgb(255, 200, 70), 2)
+local tutTitle = label(tutFrame, "", U2(1, -24, 0, 30), U2(0, 12, 0, 8), rgb(255, 210, 90))
+tutTitle.TextXAlignment = Enum.TextXAlignment.Left
+tutTitle.ZIndex = 41
+local tutText = label(tutFrame, "", U2(1, -24, 0, 70), U2(0, 12, 0, 42), rgb(235, 235, 245), false)
+tutText.TextSize = 18
+tutText.TextWrapped = true
+tutText.TextXAlignment = Enum.TextXAlignment.Left
+tutText.TextYAlignment = Enum.TextYAlignment.Top
+tutText.ZIndex = 41
+local tutStepLabel = label(tutFrame, "", U2(0, 80, 0, 22), U2(0, 12, 1, -36), rgb(160, 165, 190))
+tutStepLabel.TextXAlignment = Enum.TextXAlignment.Left
+tutStepLabel.ZIndex = 41
+local tutSkip = button(tutFrame, "Skip", rgb(90, 90, 105), U2(0, 90, 0, 34), U2(1, -212, 1, -44))
+local tutNext = button(tutFrame, "Next ▶", rgb(60, 150, 80), U2(0, 110, 0, 34), U2(1, -116, 1, -44))
+tutSkip.ZIndex = 41
+tutNext.ZIndex = 41
+local tutHelp = button(gui, "❓", rgb(70, 110, 190), U2(0, 40, 0, 40), U2(1, -50, 0.5, -20))
+
+local tutIndex, tutSnapshot = 0, {}
+local function tutShow(i)
+	tutIndex = i
+	local step = tutSteps[i]
+	if not step then
+		tutFrame.Visible = false
+		R.Action:FireServer("TutorialDone")
+		return
+	end
+	tutSnapshot = { TotalMined = state.TotalMined, Coins = state.Coins }
+	tutTitle.Text = step[1]
+	tutText.Text = step[2]
+	tutStepLabel.Text = i .. " / " .. #tutSteps
+	tutNext.Text = (i == #tutSteps) and "Finish ✔" or "Next ▶"
+	tutFrame.Visible = true
+	tutFrame.Position = U2(0.5, -230, 0, 70)
+	TweenService:Create(tutFrame, TweenInfo.new(0.25, Enum.EasingStyle.Back), { Position = U2(0.5, -230, 0, 90) }):Play()
+end
+tutNext.MouseButton1Click:Connect(function() tutShow(tutIndex + 1) end)
+tutSkip.MouseButton1Click:Connect(function() tutShow(#tutSteps + 1) end)
+tutHelp.MouseButton1Click:Connect(function() tutShow(1) end)
+
+task.spawn(function()
+	while state.TutorialDone == nil do task.wait(0.5) end -- wait for the first sync
+	if not state.TutorialDone then tutShow(1) end
+	while true do
+		task.wait(0.4)
+		local step = tutFrame.Visible and tutSteps[tutIndex]
+		if step and step[3] and step[3](tutSnapshot) then
+			play("Buy")
+			toast("✅ " .. step[1], "sell")
+			tutShow(tutIndex + 1)
+		end
+	end
+end)
+
 ---------------------------------------------------------------- gates (client-side unlock)
 local function refreshGates()
 	for _, g in ipairs(World:WaitForChild("Gates"):GetChildren()) do
@@ -762,11 +831,11 @@ local cc = Lighting:FindFirstChild("ZoneColor")
 local currentZone = -1
 local weather = new("Part", { Name = "Weather", Anchored = true, CanCollide = false, CanQuery = false, CanTouch = false, Transparency = 1, Size = V3(80, 1, 80) }, fxFolder)
 local weatherFx = {
-	Frozen = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 120, Lifetime = NumberRange.new(5, 7), Speed = NumberRange.new(6, 9), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(15, 15), Size = NumberSequence.new(0.35), Color = ColorSequence.new(rgb(255, 255, 255)), Acceleration = V3(2, 0, 1) }, weather),
-	Volcano = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/fire_main.dds", Rate = 40, Lifetime = NumberRange.new(4, 6), Speed = NumberRange.new(2, 4), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(60, 60), Size = NumberSequence.new(0.4), LightEmission = 1, Color = ColorSequence.new(rgb(255, 150, 40), rgb(255, 60, 0)), Acceleration = V3(0, 3, 0) }, weather),
-	Grotto = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 30, Lifetime = NumberRange.new(4, 6), Speed = NumberRange.new(0.5, 1.5), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.3), LightEmission = 1, Color = ColorSequence.new(rgb(200, 140, 255), rgb(90, 220, 255)) }, weather),
-	Void = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 50, Lifetime = NumberRange.new(5, 8), Speed = NumberRange.new(0.3, 1), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.5), LightEmission = 1, Color = ColorSequence.new(rgb(255, 255, 255), rgb(190, 120, 255)) }, weather),
-	Meadow = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 8, Lifetime = NumberRange.new(5, 8), Speed = NumberRange.new(0.5, 1), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.25), LightEmission = 1, Color = ColorSequence.new(rgb(255, 255, 150)) }, weather),
+	Frozen = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 60, Lifetime = NumberRange.new(5, 7), Speed = NumberRange.new(6, 9), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(15, 15), Size = NumberSequence.new(0.35), Color = ColorSequence.new(rgb(255, 255, 255)), Acceleration = V3(2, 0, 1) }, weather),
+	Volcano = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/fire_main.dds", Rate = 18, Lifetime = NumberRange.new(4, 6), Speed = NumberRange.new(2, 4), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(60, 60), Size = NumberSequence.new(0.4), LightEmission = 0.5, Color = ColorSequence.new(rgb(255, 150, 40), rgb(255, 60, 0)), Acceleration = V3(0, 3, 0) }, weather),
+	Grotto = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 12, Lifetime = NumberRange.new(4, 6), Speed = NumberRange.new(0.5, 1.5), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.3), LightEmission = 0.5, Color = ColorSequence.new(rgb(200, 140, 255), rgb(90, 220, 255)) }, weather),
+	Void = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 20, Lifetime = NumberRange.new(5, 8), Speed = NumberRange.new(0.3, 1), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.5), LightEmission = 0.5, Color = ColorSequence.new(rgb(255, 255, 255), rgb(190, 120, 255)) }, weather),
+	Meadow = new("ParticleEmitter", { Enabled = false, Texture = "rbxasset://textures/particles/sparkles_main.dds", Rate = 5, Lifetime = NumberRange.new(5, 8), Speed = NumberRange.new(0.5, 1), EmissionDirection = Enum.NormalId.Bottom, SpreadAngle = Vector2.new(180, 180), Size = NumberSequence.new(0.25), LightEmission = 0.5, Color = ColorSequence.new(rgb(255, 255, 150)) }, weather),
 }
 
 local function applyZone(z)

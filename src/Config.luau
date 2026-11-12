@@ -80,7 +80,7 @@ Config.Backpacks = {
 local function amb(t)
 	return t
 end
-Config.HubAmbience = amb({ Fog = Color3.fromRGB(200, 225, 255), Density = 0.28, Haze = 1, Tint = Color3.new(1, 1, 1), Brightness = 0.02, Saturation = 0.15, Contrast = 0.05, ClockTime = 14, Ambient = Color3.fromRGB(120, 120, 130) })
+Config.HubAmbience = amb({ Fog = Color3.fromRGB(200, 225, 255), Density = 0.28, Haze = 1, Tint = Color3.new(1, 1, 1), Brightness = 0.02, Saturation = 0, Contrast = 0.05, ClockTime = 14, Ambient = Color3.fromRGB(120, 120, 130) })
 
 -- Zones (3D layout). Spawn = where ores appear (rays cast down onto terrain/platforms)
 Config.Zones = {
@@ -89,7 +89,7 @@ Config.Zones = {
 		Center = Vector3.new(0, 10, 175), Radius = 85, OreCount = 55,
 		Spawn = { MinR = 0, MaxR = 78, StartY = 120, MinY = 5, MaxY = 60 },
 		RockColor = Color3.fromRGB(125, 125, 118),
-		Ambience = amb({ Fog = Color3.fromRGB(210, 235, 255), Density = 0.25, Haze = 0.8, Tint = Color3.fromRGB(255, 250, 235), Brightness = 0.03, Saturation = 0.25, Contrast = 0.05, ClockTime = 14, Ambient = Color3.fromRGB(130, 130, 120) }),
+		Ambience = amb({ Fog = Color3.fromRGB(210, 235, 255), Density = 0.25, Haze = 0.8, Tint = Color3.fromRGB(255, 250, 235), Brightness = 0.03, Saturation = 0.04, Contrast = 0.05, ClockTime = 14, Ambient = Color3.fromRGB(130, 130, 120) }),
 		Ores = {
 			{ Name = "Stone", HP = 2, Value = 1, Weight = 65, Size = 4, Color = Color3.fromRGB(150, 150, 150), Material = Enum.Material.Slate, Style = "Rock" },
 			{ Name = "Coal",  HP = 5, Value = 3, Weight = 30, Size = 4.2, Color = Color3.fromRGB(35, 35, 35), Material = Enum.Material.Basalt, Style = "Rock" },
@@ -101,7 +101,7 @@ Config.Zones = {
 		Center = Vector3.new(210, 10, 68), Radius = 80, OreCount = 55,
 		Spawn = { MinR = 0, MaxR = 38, StartY = 44, MinY = 10, MaxY = 41 },
 		RockColor = Color3.fromRGB(70, 62, 58),
-		Ambience = amb({ Fog = Color3.fromRGB(25, 20, 18), Density = 0.6, Haze = 0, Tint = Color3.fromRGB(255, 215, 170), Brightness = -0.03, Saturation = -0.1, Contrast = 0.15, ClockTime = 0, Ambient = Color3.fromRGB(70, 55, 45) }),
+		Ambience = amb({ Fog = Color3.fromRGB(25, 20, 18), Density = 0.6, Haze = 0, Tint = Color3.fromRGB(255, 215, 170), Brightness = -0.03, Saturation = -0.1, Contrast = 0.07, ClockTime = 0, Ambient = Color3.fromRGB(70, 55, 45) }),
 		Ores = {
 			{ Name = "Copper", HP = 10, Value = 7,  Weight = 55, Size = 4.5, Color = Color3.fromRGB(205, 115, 60),  Material = Enum.Material.Metal, Style = "Metal" },
 			{ Name = "Iron",   HP = 14, Value = 11, Weight = 38, Size = 4.5, Color = Color3.fromRGB(215, 195, 175), Material = Enum.Material.Metal, Style = "Metal" },
@@ -113,7 +113,7 @@ Config.Zones = {
 		Center = Vector3.new(153, -40, -210), Radius = 55, OreCount = 50,
 		Spawn = { MinR = 0, MaxR = 36, StartY = -25, MinY = -64, MaxY = -40 },
 		RockColor = Color3.fromRGB(60, 45, 90),
-		Ambience = amb({ Fog = Color3.fromRGB(70, 30, 120), Density = 0.55, Haze = 0, Tint = Color3.fromRGB(220, 190, 255), Brightness = 0, Saturation = 0.3, Contrast = 0.1, ClockTime = 0, Ambient = Color3.fromRGB(90, 60, 140) }),
+		Ambience = amb({ Fog = Color3.fromRGB(70, 30, 120), Density = 0.55, Haze = 0, Tint = Color3.fromRGB(220, 190, 255), Brightness = 0, Saturation = 0.05, Contrast = 0.05, ClockTime = 0, Ambient = Color3.fromRGB(90, 60, 140) }),
 		Ores = {
 			{ Name = "Gold",     HP = 45, Value = 35, Weight = 55, Size = 5, Color = Color3.fromRGB(255, 205, 50), Material = Enum.Material.Foil,  Style = "Metal" },
 			{ Name = "Amethyst", HP = 70, Value = 60, Weight = 38, Size = 5, Color = Color3.fromRGB(170, 90, 255), Material = Enum.Material.Glass, Style = "Crystal", Glow = true },
@@ -125,7 +125,7 @@ Config.Zones = {
 		Center = Vector3.new(-176, 10, -243), Radius = 118, OreCount = 60,
 		Spawn = { MinR = 30, MaxR = 100, StartY = 200, MinY = 8, MaxY = 120 },
 		RockColor = Color3.fromRGB(40, 30, 28),
-		Ambience = amb({ Fog = Color3.fromRGB(120, 50, 25), Density = 0.45, Haze = 2, Tint = Color3.fromRGB(255, 200, 170), Brightness = 0, Saturation = 0.2, Contrast = 0.15, ClockTime = 17.6, Ambient = Color3.fromRGB(120, 60, 40) }),
+		Ambience = amb({ Fog = Color3.fromRGB(120, 50, 25), Density = 0.45, Haze = 2, Tint = Color3.fromRGB(255, 200, 170), Brightness = 0, Saturation = 0.03, Contrast = 0.07, ClockTime = 17.6, Ambient = Color3.fromRGB(120, 60, 40) }),
 		Ores = {
 			{ Name = "Ruby",     HP = 150, Value = 140, Weight = 55, Size = 5.5, Color = Color3.fromRGB(230, 20, 50), Material = Enum.Material.Glass, Style = "Crystal", Glow = true },
 			{ Name = "Obsidian", HP = 240, Value = 230, Weight = 38, Size = 5.5, Color = Color3.fromRGB(30, 15, 45),  Material = Enum.Material.Glass, Style = "Rock" },
@@ -152,7 +152,7 @@ Config.Zones = {
 			Islands = {}, -- filled in below
 		},
 		RockColor = Color3.fromRGB(25, 10, 40),
-		Ambience = amb({ Fog = Color3.fromRGB(30, 0, 60), Density = 0.4, Haze = 0, Tint = Color3.fromRGB(230, 200, 255), Brightness = 0, Saturation = 0.35, Contrast = 0.2, ClockTime = 0, Ambient = Color3.fromRGB(110, 60, 160) }),
+		Ambience = amb({ Fog = Color3.fromRGB(30, 0, 60), Density = 0.4, Haze = 0, Tint = Color3.fromRGB(230, 200, 255), Brightness = 0, Saturation = 0.05, Contrast = 0.08, ClockTime = 0, Ambient = Color3.fromRGB(110, 60, 160) }),
 		Ores = {
 			{ Name = "Void Shard", HP = 3000, Value = 3500, Weight = 60, Size = 6.5, Color = Color3.fromRGB(120, 0, 200),   Material = Enum.Material.Neon, Style = "Crystal", Glow = true },
 			{ Name = "Starstone",  HP = 6000, Value = 8000, Weight = 33, Size = 6.5, Color = Color3.fromRGB(255, 240, 150), Material = Enum.Material.Neon, Style = "Crystal", Glow = true },
