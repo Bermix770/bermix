@@ -55,7 +55,7 @@ local function defaultData()
 		Coins = 0, Rebirths = 0, Tool = 1, Backpack = 1, Bag = 0, BagValue = 0,
 		QuestIndex = 1, QuestProgress = 0, TotalMined = 0, TotalEarned = 0,
 		LastDaily = 0, Streak = 0, Pets = {}, NextPetId = 1, Codes = {},
-		TotalHatched = 0, BossKills = 0, ShinyFound = 0, AutoMine = false,
+		TotalHatched = 0, BossKills = 0, ShinyFound = 0, AutoMine = false, TutorialDone = false,
 	}
 end
 
@@ -163,7 +163,7 @@ local function sync(player)
 		DailyIn = math.max(0, data.LastDaily + Config.DailyCooldown - os.time()), Streak = data.Streak,
 		Pets = data.Pets, Equipped = ids, Slots = slots(player), Passes = passes,
 		AutoMine = data.AutoMine, TotalMined = data.TotalMined, TotalHatched = data.TotalHatched,
-		IsStudio = RunService:IsStudio(),
+		IsStudio = RunService:IsStudio(), TutorialDone = data.TutorialDone,
 	})
 	local ls = player:FindFirstChild("leaderstats")
 	if ls then
@@ -800,7 +800,10 @@ end
 ActionRemote.OnServerEvent:Connect(function(player, action, arg)
 	local data = Data[player]
 	if not data or type(action) ~= "string" then return end
-	if action == "Ready" then
+	if action == "TutorialDone" then
+		data.TutorialDone = true
+		return
+	elseif action == "Ready" then
 		-- just sync
 	elseif action == "BuyTool" then
 		local lvl = tonumber(arg)
@@ -909,7 +912,8 @@ local function save(player)
 	if not ok then warn("[MineRush] save failed:", err) end
 end
 
-Players.PlayerAdded:Connect(function(player)
+local function onPlayerAdded(player)
+	if Data[player] then return end
 	local data = defaultData()
 	if store then
 		local ok, saved = pcall(function() return store:GetAsync("p_" .. player.UserId) end)
@@ -960,7 +964,10 @@ Players.PlayerAdded:Connect(function(player)
 	end
 	sync(player)
 	if boss then BossRemote:FireClient(player, "spawn", boss.HP, boss.Max, boss.Pos) end
-end)
+end
+-- WorldBuilder.Build yields for several seconds, so players (especially in Studio) can join before this line runs.
+Players.PlayerAdded:Connect(onPlayerAdded)
+for _, p in ipairs(Players:GetPlayers()) do task.spawn(onPlayerAdded, p) end
 
 Players.PlayerRemoving:Connect(function(player)
 	save(player)
